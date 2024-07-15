@@ -5,93 +5,141 @@ import java.util.List;
 
 public class Node {
 
-	public List<Node> children = new ArrayList<Node>();
-	public Node parent = null;
-	public int[] puzzle = new int[9];
-	public int x = 0;
-	public int col = 3;
+	// Define class variables
+	public List<Node> children = new ArrayList<Node>(); // List of children nodes
+	public Node parent = null; 							// Parent node
+	public int[] puzzle = new int[9];					// Puzzle represented by array of integers
+	public int x = 0;									// Position of zero in puzzle array
+	public int col = 3;									// Number of puzzle columns
 	
+	// Require integer array to instantiate class
 	public Node(int[] p) {
+		// Set puzzle in this.puzzle
 		SetPuzzle(p);
 	}
 	
 	public void SetPuzzle(int[] p) {
+		// Copy position by position to puzzle array
 		for(int i=0; i < this.puzzle.length; i++) {
 			this.puzzle[i] = p[i];
 			
+			// When found 0, set position to x variable
 			if(this.puzzle[i] == 0) {
 				this.x = i;
 			}
 		}
 	}
 	
+	// Create node children expanding moves
 	public void ExpandMove() {		
+		// Try to move to all directions passing puzzle and 0 position to each function
 		MoveToRight(puzzle, this.x);
 		MoveToLeft(puzzle, this.x);
 		MoveToUp(puzzle, this.x);
 		MoveToDown(puzzle, this.x);
 	}
 	
+	// Try to move 0 to right
 	public void MoveToRight(int[] p, int i) {
+		// Check if is possible to move to right
 		if(i % this.col < this.col - 1) {
+			// Define a hypothetical puzzle from the current node
 			int[] hypotheticalPuzzle = new int[9];
 			CopyPuzzle(hypotheticalPuzzle, p);
 			
+			//    Swaps values ​​of the position whose value contains zero 
+			// with the position immediately to the right
 			int temp = hypotheticalPuzzle[i + 1];
 			hypotheticalPuzzle[i + 1] = hypotheticalPuzzle[i];
 			hypotheticalPuzzle[i] = temp;
 			
+			// Instantiate child puzzle as Node
 			Node child = new Node(hypotheticalPuzzle);
+			
+			// Push child node to children list
 			children.add(child);
+			
+			// Set child parent as current node
 			child.parent = this;
 		}
 	}
 	
+	// Try to move 0 to left
 	public void MoveToLeft(int[] p, int i) {
+		// Check if is possible to move to left
 		if(i % this.col > 0) {
+			// Define a hypothetical puzzle from the current node
 			int[] hypotheticalPuzzle = new int[9];
 			CopyPuzzle(hypotheticalPuzzle, p);
 			
+			//    Swaps values ​​of the position whose value contains zero 
+			// with the position immediately to the left
 			int temp = hypotheticalPuzzle[i - 1];
 			hypotheticalPuzzle[i - 1] = hypotheticalPuzzle[i];
 			hypotheticalPuzzle[i] = temp;
 			
+			// Instantiate child puzzle as Node
 			Node child = new Node(hypotheticalPuzzle);
+			
+			// Push child node to children list
 			children.add(child);
+			
+			// Set child parent as current node
 			child.parent = this;
 		}
 	}
 	
+	// Try to move 0 to up
 	public void MoveToUp(int[] p, int i) {
+		// Check if is possible to move to up
 		if(i - this.col >= 0) {
+			// Define a hypothetical puzzle from the current node
 			int[] hypotheticalPuzzle = new int[9];
 			CopyPuzzle(hypotheticalPuzzle, p);
 			
+			//    Swaps values ​​of the position whose value contains zero 
+			// with the position immediately to the up
 			int temp = hypotheticalPuzzle[i - 3];
 			hypotheticalPuzzle[i - 3] = hypotheticalPuzzle[i];
 			hypotheticalPuzzle[i] = temp;
 			
+			// Instantiate child puzzle as Node
 			Node child = new Node(hypotheticalPuzzle);
+			
+			// Push child node to children list
 			children.add(child);
+			
+			// Set child parent as current node
 			child.parent = this;
 		}
 	}
 	
+	// Try to move 0 to down
 	public void MoveToDown(int[] p, int i) {
+		// Check if is possible to move to down
 		if(i + this.col < this.puzzle.length) {
+			// Define a hypothetical puzzle from the current node
 			int[] hypotheticalPuzzle = new int[9];
 			CopyPuzzle(hypotheticalPuzzle, p);
 			
+			//    Swaps values ​​of the position whose value contains zero 
+			// with the position immediately to the down
 			int temp = hypotheticalPuzzle[i + 3];
 			hypotheticalPuzzle[i + 3] = hypotheticalPuzzle[i];
 			hypotheticalPuzzle[i] = temp;
 			
+			// Instantiate child puzzle as Node
 			Node child = new Node(hypotheticalPuzzle);
+			
+			// Push child node to children list
 			children.add(child);
+			
+			// Set child parent as current node
 			child.parent = this;
 		}
 	}
 	
+	// Print puzzle by going through each position in the array
 	public void PrintPuzzle() {
 		System.out.println();
 		int m = 0;
@@ -105,10 +153,11 @@ public class Node {
 		}
 	}
 	
+	// Check if puzzle is equal to node puzzle
 	public boolean IsSamePuzzle(int[] p) {
-
 		for(int i=0; i < p.length; i++) {
 			if(this.puzzle[i] != p[i]) {
+				// If found different value for same position
 				return false;
 			}
 		}
@@ -116,6 +165,7 @@ public class Node {
 		return true;
 	}
 	
+	// Copy each array position to the same position in the other array
 	public void CopyPuzzle(int[] a, int[] b) {
 		for(int i = 0; i < b.length; i++) {
 			a[i] = b[i];

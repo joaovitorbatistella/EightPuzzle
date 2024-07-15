@@ -7,12 +7,14 @@ import java.util.Scanner;
 public class EightPuzzle {
 	public static void main(String[] args) {
 		
+		// Define an empty array of integers that represent initial puzzle
 		int[] puzzle = {};
 //				1, 2, 4,
 //				3, 0, 5,
 //				7, 6, 8
 //		};
 		
+		// Define an empty array of integers that represent goal puzzle
 		int[] goalPuzzle = {};
 //				1, 2, 3,
 //				4, 5, 6,
@@ -35,27 +37,29 @@ public class EightPuzzle {
 		
 		read.close();
 		
+		// Splitting input values, mapping, parsing to integer and assignment to arrays
 		puzzle 		= Arrays.stream(str_puzzle.split(" ")).mapToInt(Integer::parseInt).toArray();
 		goalPuzzle  = Arrays.stream(str_goal_puzzle.split(" ")).mapToInt(Integer::parseInt).toArray();
 		
 		System.out.println("\nRunning...");
 		
+		// Instantiate root node using initial puzzle
 		Node root = new Node(puzzle);
+		
+		// Instantiate core that contains BFS algorithm
 		Core core = new Core();
-		
-		long start_time = System.nanoTime();
-		
+				
+		// Execute Breadth First Search algorithm to solve puzzle
 		List<Node> solution = core.BreadthFirstSearch(root, goalPuzzle);
 		
-		long end_time = System.nanoTime();
-		double difference = (end_time - start_time) / 1e6;
-		
+		// Print algorithm performance results
 		System.out.println("\nNumber of states needed to solve (expanded nodes): " + core.getNumberOfExpandedNodes());
-		System.out.println("Time to solve (ms): " + difference);
+		System.out.println("Time to solve (ms): " + core.getExecutionTime());
 		System.out.println("Solution steps: " + solution.size());
 		System.out.println("Open list: " + core.getOpenListSize());
 		System.out.println("Closed list: " + core.getCloseListSize());
 		
+		// Print path to solve
 		System.out.println("\nPath:");
 		
 		solution = solution.reversed();
