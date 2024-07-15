@@ -27,6 +27,9 @@ As entradas devem conter valores inteiros separados por um espaço em branco, ex
 ```text
 1 2 4 3 0 5 7 6 8
 ```
+```text
+0 1 2 3 4 5 6 7 8
+```
 
 A saída do programa contém o número de nodos criados até a solução do puzzle, o tempo de execução do resolvedor (**Breadth-first Search**), 
 o número de passos necessários para solucionar o puzzle e qual o caminho para a solução. Exemplo:
