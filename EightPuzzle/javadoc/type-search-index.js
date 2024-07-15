@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"com.mycompany","l":"Core"},{"p":"com.mycompany","l":"EightPuzzle"},{"p":"com.mycompany","l":"Node"}];updateSearchResults();

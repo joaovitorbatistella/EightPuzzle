@@ -55,7 +55,7 @@ public class EightPuzzle {
 		// Print algorithm performance results
 		System.out.println("\nNumber of states needed to solve (expanded nodes): " + core.getNumberOfExpandedNodes());
 		System.out.println("Time to solve (ms): " + core.getExecutionTime());
-		System.out.println("Solution steps: " + solution.size());
+		System.out.println("Solution steps: " + (solution.size() - 1)); // Subtract 1 to not count initial state
 		System.out.println("Open list: " + core.getOpenListSize());
 		System.out.println("Closed list: " + core.getCloseListSize());
 		
