@@ -34,7 +34,7 @@ A estrutura de classes é a mesma, porém, é adicionado 3 novos atributos à cl
 	public double h; // função de avaliação f(n) = g(n) + h(n)
 ```
 
-Para as listas de controle dos estados, a estrutura utilizadadifere. No **Breadth-first Search** são usadas duas filas simples, enquanto para **A\*** é utilizado uma lista simples para os nós 'fechados' e uma PriorityQueue para os nós abertos, está na qual recebe a instância da classe NodeComparator como argumento do seu *__construct*, NodeComparator tem a responsabilidade de ordenar os elementos da fila a partir de uma regra estabelecida, neste caso o mnor valor tem prioridade.
+Para as listas de controle dos estados, a estrutura utilizadadifere. No **Breadth-first Search** são usadas duas filas simples, enquanto para **A\*** é utilizado uma lista simples para os nós 'fechados' e uma PriorityQueue para os nós abertos, está na qual recebe a instância da classe NodeComparator como argumento do seu *__construct*, NodeComparator tem a responsabilidade de ordenar os elementos da fila a partir de uma regra estabelecida, neste caso o menor valor tem prioridade.
 
 Quanto ao funcionamento do algoritmo, ambos percorrem a lista de nodos abertos e espandem os nodos filhos. O que difere é utilização da heurística no algoritmo **A\***, que irá manusear a lista de nodos abertos de modo que se imponha uma prioridade na análise dos nodos (puzzles). No **A\***, caso um nodo filho tenha um custo estimado menor do que seu pai, ele é adicionado a fila de nodos abertos, e seu pai é removido dela.
 
