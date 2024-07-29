@@ -35,6 +35,15 @@ public class EightPuzzle {
 			
 		String str_goal_puzzle = read.nextLine();
 		
+		int algorithm = -1;
+		do {
+			System.out.println(
+					"\nChoose an algorithm. Type 0 for BFS and 1 for A*:"
+				);
+				
+			algorithm = read.nextInt();
+		} while(algorithm != 1 && algorithm != 0);
+		
 		read.close();
 		
 		// Splitting input values, mapping, parsing to integer and assignment to arrays
@@ -49,15 +58,22 @@ public class EightPuzzle {
 		// Instantiate core that contains BFS algorithm
 		Core core = new Core();
 				
-		// Execute Breadth First Search algorithm to solve puzzle
-		List<Node> solution = core.BreadthFirstSearch(root, goalPuzzle);
+		List<Node> solution;
+		if(algorithm == 0) {
+			// Execute Breadth First Search algorithm to solve puzzle
+			solution = core.BreadthFirstSearch(root, goalPuzzle);
+		} else {
+			// Execute A* Search algorithm to solve puzzle
+			solution = core.AStarSearch(root, goalPuzzle);
+		}
+		
 		
 		// Print algorithm performance results
-		System.out.println("\nNumber of states needed to solve (expanded nodes): " + core.getNumberOfExpandedNodes());
+		System.out.println("Number of states needed to solve (expanded nodes): " + core.getNumberOfExpandedNodes());
 		System.out.println("Time to solve (ms): " + core.getExecutionTime());
 		System.out.println("Solution steps: " + (solution.size() - 1)); // Subtract 1 to not count initial state
-		System.out.println("Open list: " + core.getOpenListSize());
-		System.out.println("Closed list: " + core.getCloseListSize());
+		//System.out.println("Open list: " + core.getOpenListSize());
+		//System.out.println("Closed list: " + core.getCloseListSize());
 		
 		// Print path to solve
 		System.out.println("\nPath:");

@@ -2,20 +2,18 @@ package com.mycompany;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Comparator;
 
 public class Core {
 	// Define class variables
 	private int numberOfExpandedNodes = 0;
 	private double executionTime = 0;
-	private List<Node> OpenList;
-	private List<Node> ClosedList;
 	private List<Node> PathToSolution;
 
 	// Initialize variables on construct
 	public Core() {
 		this.numberOfExpandedNodes = 0;
-		this.OpenList = new ArrayList<Node>();
-		this.ClosedList = new ArrayList<Node>();
 		this.PathToSolution = new ArrayList<Node>();
 	}
 	
@@ -23,24 +21,117 @@ public class Core {
 	public int getNumberOfExpandedNodes() {
 		return this.numberOfExpandedNodes;
 	}
-	
-	// Get size of open list
-	public int getOpenListSize() {
-		return this.OpenList.size();
-	}
-	
-	// Get size of close list
-	public int getCloseListSize() {
-		return this.ClosedList.size();
-	}
-	
+		
 	// Get algorithm execution time
 	public double getExecutionTime() {
 		return this.executionTime;
 	}
 	
+	// Comparator to order nodes by f(n) value
+	class NodeComparator implements Comparator<Node> {
+	    public int compare(Node n1, Node n2) {
+	        return Double.compare(n1.f, n2.f);
+	    }
+	}
+
+	// Algorithm core
+	public List<Node> AStarSearch(Node root, int[] goalPuzzle) {
+	    // Reset execution time variable
+	    this.executionTime = 0;
+
+	    // Start timer
+	    long start_time = System.nanoTime();
+
+	    // Priority Queue to hold nodes to be explored, ordered by f(n)
+	    PriorityQueue<Node> openList = new PriorityQueue<>(new NodeComparator());
+	    
+	    // List to hold explored nodes
+	    List<Node> closedList = new ArrayList<>();
+	    
+	    this.numberOfExpandedNodes = 0;
+
+	    // Set the initial g and h values
+	    root.g = 0;
+	    root.h = root.CalculateHeuristic(goalPuzzle); // Assumes a method to calculate h(n)
+	    root.f = root.g + root.h;
+
+	    // Add root node to open list
+	    openList.add(root);
+
+	    // If open list is not empty
+	    while (!openList.isEmpty()) {
+	        // Get node with the smallest f(n)
+	        Node currentNode = openList.poll();
+	        
+	        // Check if we reached the goal
+	        if (currentNode.IsSamePuzzle(goalPuzzle)) {
+	            System.out.println("Goal found!");
+	            PathTrace(this.PathToSolution, currentNode);
+	            break;
+	        }
+
+	        // Add current node to closed list
+	        closedList.add(currentNode);
+	        
+	        // Expand possible moves from current node
+	        currentNode.ExpandMove();
+	        
+	        this.numberOfExpandedNodes += currentNode.children.size();
+
+	        // For each child of current node
+	        for (Node child : currentNode.children) {
+                child.g = currentNode.g + 1;
+                child.h = child.CalculateHeuristic(goalPuzzle);
+                child.f = child.g + child.h;
+
+                boolean inOpenList = false;
+                for (Node openNode : openList) {
+                    if (child.IsSamePuzzle(openNode.puzzle)) {
+                        inOpenList = true;
+                        if (child.g < openNode.g) {
+                            openList.remove(openNode);
+                            openList.add(child);
+                        }
+                        break;
+                    }
+                }
+
+                if (!inOpenList) {
+                    boolean inClosedList = false;
+                    for (Node closedNode : closedList) {
+                        if (child.IsSamePuzzle(closedNode.puzzle)) {
+                            inClosedList = true;
+                            if (child.g < closedNode.g) {
+                                closedList.remove(closedNode);
+                                openList.add(child);
+                            }
+                            break;
+                        }
+                    }
+                    if (!inClosedList) {
+                        openList.add(child);
+                    }
+                }
+            }
+	    }
+
+	    // Stop timer and set executionTime as milliseconds (ms)
+	    long end_time = System.nanoTime();
+	    this.executionTime = (end_time - start_time) / 1e6;
+	    
+	    System.out.println();
+	    System.out.println("Open list: " + openList.size());
+	    System.out.println("Closed list: " + closedList.size());
+
+	    // Return path to solution
+	    return this.PathToSolution;
+	}
+	
 	// Algorithm core
 	public List<Node> BreadthFirstSearch(Node root, int[] goalPuzzle) {
+		
+		List<Node> OpenList = new ArrayList<Node>();
+		List<Node> ClosedList = new ArrayList<Node>();
 		
 		// Reset execution time variable
 		this.executionTime = 0;
@@ -60,20 +151,20 @@ public class Core {
 			boolean goalFound = false;
 			
 			// Push root puzzle to open list
-			this.OpenList.add(root);
+			OpenList.add(root);
 			
 			// Reset number of expanded nodes
 			this.numberOfExpandedNodes = 0;
 			
 			// If there's any puzzle in the open list and the puzzle is not found
-			while(this.OpenList.size() > 0 && !goalFound) {
+			while(OpenList.size() > 0 && !goalFound) {
 				
 				// Set currentNode as first element from open list
-				Node currentNode = this.OpenList.get(0);
+				Node currentNode = OpenList.get(0);
 
 				// Push currentNode to closed list then remove from open list
-				this.ClosedList.add(currentNode);
-				this.OpenList.remove(0);
+				ClosedList.add(currentNode);
+				OpenList.remove(0);
 				
 				// Expand possible moves from current node
 				currentNode.ExpandMove();
@@ -87,7 +178,7 @@ public class Core {
 					Node currentChild = currentNode.children.get(i);
 					
 					// If currentChild has not been analyzed yet
-					if(!Contains(this.OpenList, currentChild) && !Contains(this.ClosedList, currentChild)) {
+					if(!Contains(OpenList, currentChild) && !Contains(ClosedList, currentChild)) {
 						// Check if currentChild is the goal puzzle
 						if(currentChild.IsSamePuzzle(goalPuzzle)) {
 							System.out.println("Goal found!");
@@ -100,7 +191,7 @@ public class Core {
 						}
 						
 						// Push currentChild to open list
-						this.OpenList.add(currentChild);
+						OpenList.add(currentChild);
 					}
 				}
 				
@@ -111,6 +202,10 @@ public class Core {
 		// Stop timer and set executionTime as milliseconds (ms)
 		long end_time = System.nanoTime();
 		this.executionTime = (end_time - start_time) / 1e6;
+		
+		System.out.println();
+		System.out.println("Open list: " + OpenList.size());
+	    System.out.println("Closed list: " + ClosedList.size());
 		
 		// Return path to solution
 		return this.PathToSolution;

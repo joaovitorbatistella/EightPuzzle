@@ -11,6 +11,9 @@ public class Node {
 	public int[] puzzle = new int[9];					// Puzzle represented by array of integers
 	public int x = 0;									// Position of zero in puzzle array
 	public int col = 3;									// Number of puzzle columns
+	public double f;									// Cost of the path from the start to this node
+	public double g;									// Heuristic, cost estimate to goal
+	public double h;									// Evaluation function f(n) = g(n) + h(n)
 	
 	// Require integer array to instantiate class
 	public Node(int[] p) {
@@ -29,6 +32,39 @@ public class Node {
 			}
 		}
 	}
+	
+	// Manhattan distance
+	 public int CalculateHeuristic(int[] goalPuzzle) {
+        int totalDistance = 0;
+
+        // For each position, calculate the Manhattan distance to the target position
+        for (int i = 0; i < puzzle.length; i++) {
+            int currentVal = puzzle[i];
+
+
+            if (currentVal == 0) continue;
+
+            // Found target position in goal puzzle
+            int goalIndex = 0;
+            for (int j = 0; j < goalPuzzle.length; j++) {
+                if (goalPuzzle[j] == currentVal) {
+                    goalIndex = j;
+                    break;
+                }
+           }
+
+            // Coordinates of current position and target position
+            int currentRow = i / 3;
+            int currentCol = i % 3;
+            int goalRow = goalIndex / 3;
+            int goalCol = goalIndex % 3;
+
+            // Calculate distance to Manhattan and accumulate
+            totalDistance += Math.abs(currentRow - goalRow) + Math.abs(currentCol - goalCol);
+        }
+
+       return totalDistance;
+	 }
 	
 	// Create node children expanding moves
 	public void ExpandMove() {		
