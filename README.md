@@ -68,9 +68,11 @@ Running...
 Goal found!
 Tracing path...
 
-Number of states needed to solve (expanded nodes): 9618
-Time to solve (ms): 95.715531
-Solution steps: 15
+Open list: 75
+Closed list: 117
+Number of states needed to solve (expanded nodes): 315
+Time to solve (ms): 8.575897
+Solution steps: 14
 
 Path:
 
@@ -132,7 +134,7 @@ Path:
 
 0 1 2 
 3 4 5 
-6 7 8
+6 7 8 
 ```
 
 ## Testes
